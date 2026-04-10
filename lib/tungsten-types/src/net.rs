@@ -1,9 +1,21 @@
-use crate::position::Position;
+use crate::{nodes::NodeValue, position::Position};
 
 pub enum WireType {
     Input,
     Output,
     Bidirectional,
+}
+
+pub struct PortRef {
+    pub node_id: u64,
+    pub port_name: String,
+}
+
+pub type NetId = u64;
+
+pub struct Net {
+    pub id: NetId,
+    pub value: NodeValue,
 }
 
 /// Graphical representation of a wire direction, including diagonals
