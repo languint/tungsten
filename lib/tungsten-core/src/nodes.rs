@@ -1,2 +1,2 @@
-pub mod or_gate;
+pub mod gates;
 pub mod traits;
