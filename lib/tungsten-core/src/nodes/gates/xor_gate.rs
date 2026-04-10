@@ -4,8 +4,8 @@ use crate::nodes::traits::gate::{GateIO, GateNode, GateValue};
 
 #[derive(Debug, Clone)]
 pub struct XOrGate {
-    position: tungsten_types::position::Position,
-    io: GateIO,
+    pub position: tungsten_types::position::Position,
+    pub io: GateIO,
 }
 
 impl XOrGate {
@@ -34,6 +34,8 @@ impl NodeObj for XOrGate {
 pub enum XOrGateError {
     #[error("Missing input: {0}")]
     MissingInput(String),
+    #[error("Missing output: {0}")]
+    MissingOutput(String),
 }
 
 impl GateNode<XOrGateError> for XOrGate {
@@ -49,7 +51,10 @@ impl GateNode<XOrGateError> for XOrGate {
             .ok_or(XOrGateError::MissingInput("B".to_string()))?
             .value;
 
-        self.io.get_output_mut("C").unwrap().set_value(a ^ b);
+        self.io
+            .get_output_mut("C")
+            .ok_or(XOrGateError::MissingOutput("C".to_string()))?
+            .set_value(a ^ b);
 
         Ok(())
     }

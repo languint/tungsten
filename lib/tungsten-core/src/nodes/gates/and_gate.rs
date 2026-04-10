@@ -4,8 +4,8 @@ use crate::nodes::traits::gate::{GateIO, GateNode, GateValue};
 
 #[derive(Debug, Clone)]
 pub struct AndGate {
-    position: tungsten_types::position::Position,
-    io: GateIO,
+    pub position: tungsten_types::position::Position,
+    pub io: GateIO,
 }
 
 impl AndGate {
@@ -34,6 +34,8 @@ impl NodeObj for AndGate {
 pub enum AndGateError {
     #[error("Missing input: {0}")]
     MissingInput(String),
+    #[error("Missing output: {0}")]
+    MissingOutput(String),
 }
 
 impl GateNode<AndGateError> for AndGate {
@@ -49,7 +51,10 @@ impl GateNode<AndGateError> for AndGate {
             .ok_or(AndGateError::MissingInput("B".to_string()))?
             .value;
 
-        self.io.get_output_mut("C").unwrap().set_value(a && b);
+        self.io
+            .get_output_mut("C")
+            .ok_or(AndGateError::MissingOutput("C".to_string()))?
+            .set_value(a && b);
 
         Ok(())
     }
